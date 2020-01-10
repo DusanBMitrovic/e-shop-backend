@@ -39,9 +39,13 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var typeorm_1 = require("typeorm");
 var User_1 = require("./entity/User");
+var Product_1 = require("./entity/Product");
+var ProductType_1 = require("./entity/ProductType");
 // create typeorm connection
 typeorm_1.createConnection().then(function (connection) {
     var userRepository = connection.getRepository(User_1.User);
+    var productRepository = connection.getRepository(Product_1.Product);
+    var productTypeRepository = connection.getRepository(ProductType_1.ProductType);
     // create and setup express app
     var app = express();
     app.use(bodyParser.json());
@@ -113,6 +117,68 @@ typeorm_1.createConnection().then(function (connection) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, userRepository.delete(req.params.id)];
                     case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
+            });
+        });
+    });
+    // PRODUCT routes
+    app.get('/products', function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var products;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, productRepository.find()];
+                    case 1:
+                        products = _a.sent();
+                        res.json(products);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    });
+    app.post('/products', function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var product, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, productRepository.create(req.body)];
+                    case 1:
+                        product = _a.sent();
+                        return [4 /*yield*/, productRepository.save(product)];
+                    case 2:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
+            });
+        });
+    });
+    //   PRODUCTTYPE routes
+    app.get('/productTypes', function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var productTypes;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, productTypeRepository.find()];
+                    case 1:
+                        productTypes = _a.sent();
+                        res.json(productTypes);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    });
+    app.post('/productTypes', function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var productType, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, productTypeRepository.create(req.body)];
+                    case 1:
+                        productType = _a.sent();
+                        return [4 /*yield*/, productTypeRepository.save(productType)];
+                    case 2:
                         results = _a.sent();
                         return [2 /*return*/, res.send(results)];
                 }

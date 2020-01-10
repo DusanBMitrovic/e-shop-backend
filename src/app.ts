@@ -3,10 +3,14 @@ import { Request, Response } from 'express';
 import * as bodyParser from 'body-parser';
 import { createConnection } from 'typeorm';
 import { User } from './entity/User';
+import { Product } from './entity/Product';
+import { ProductType } from './entity/ProductType';
 
 // create typeorm connection
 createConnection().then(connection => {
   const userRepository = connection.getRepository(User);
+  const productRepository = connection.getRepository(Product);
+  const productTypeRepository = connection.getRepository(ProductType);
 
   // create and setup express app
   const app = express();
@@ -39,6 +43,30 @@ createConnection().then(connection => {
 
   app.delete('/users/:id', async function(req: Request, res: Response) {
     const results = await userRepository.delete(req.params.id);
+    return res.send(results);
+  });
+
+  // PRODUCT routes
+  app.get('/products', async function(req: Request, res: Response) {
+    const products = await productRepository.find();
+    res.json(products);
+  });
+
+  app.post('/products', async function(req: Request, res: Response) {
+    const product = await productRepository.create(req.body);
+    const results = await productRepository.save(product);
+    return res.send(results);
+  });
+
+  //   PRODUCTTYPE routes
+  app.get('/productTypes', async function(req: Request, res: Response) {
+    const productTypes = await productTypeRepository.find();
+    res.json(productTypes);
+  });
+
+  app.post('/productTypes', async function(req: Request, res: Response) {
+    const productType = await productTypeRepository.create(req.body);
+    const results = await productTypeRepository.save(productType);
     return res.send(results);
   });
 
