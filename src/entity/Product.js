@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var ProductType_1 = require("./ProductType");
-var Order_1 = require("./Order");
+var ProductToOrder_1 = require("./ProductToOrder");
 var Product = /** @class */ (function () {
     function Product() {
     }
@@ -46,9 +46,9 @@ var Product = /** @class */ (function () {
         __metadata("design:type", ProductType_1.ProductType)
     ], Product.prototype, "productType", void 0);
     __decorate([
-        typeorm_1.ManyToMany(function (type) { return Order_1.Order; }, function (order) { return order.products; }),
+        typeorm_1.OneToMany(function (type) { return ProductToOrder_1.ProductToOrder; }, function (productToOrder) { return productToOrder.product; }),
         __metadata("design:type", Array)
-    ], Product.prototype, "orders", void 0);
+    ], Product.prototype, "productToOrder", void 0);
     Product = __decorate([
         typeorm_1.Entity()
     ], Product);

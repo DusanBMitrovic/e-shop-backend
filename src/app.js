@@ -42,15 +42,24 @@ var User_1 = require("./entity/User");
 var Product_1 = require("./entity/Product");
 var ProductType_1 = require("./entity/ProductType");
 var Order_1 = require("./entity/Order");
+var ProductToOrder_1 = require("./entity/ProductToOrder");
 // create typeorm connection
 typeorm_1.createConnection().then(function (connection) {
     var userRepository = connection.getRepository(User_1.User);
     var productRepository = connection.getRepository(Product_1.Product);
     var productTypeRepository = connection.getRepository(ProductType_1.ProductType);
     var orderRepository = connection.getRepository(Order_1.Order);
+    var produtctToOrderRepository = connection.getRepository(ProductToOrder_1.ProductToOrder);
     // create and setup express app
     var app = express();
     app.use(bodyParser.json());
+    app.use(function (req, res, next) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        next();
+    });
     // register routes
     app.get('/users', function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
@@ -158,7 +167,9 @@ typeorm_1.createConnection().then(function (connection) {
             var product, results;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, productRepository.create(req.body)];
+                    case 0:
+                        res.setHeader('Access-Control-Allow-Origin', 'http://localhost');
+                        return [4 /*yield*/, productRepository.create(req.body)];
                     case 1:
                         product = _a.sent();
                         return [4 /*yield*/, productRepository.save(product)];
@@ -206,7 +217,38 @@ typeorm_1.createConnection().then(function (connection) {
             var orders;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, orderRepository.find({ relations: ['products'] })];
+                    case 0: return [4 /*yield*/, orderRepository.find({
+                            relations: ['productToOrder']
+                        })];
+                    case 1:
+                        orders = _a.sent();
+                        res.json(orders);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    });
+    app.get('/orders2', function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var orders;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, produtctToOrderRepository
+                            .createQueryBuilder('productToOrder')
+                            // .select('productToOrder.productToOrderId', 'id')
+                            .select('order.id', 'id')
+                            .addSelect('order.datetime', 'datetime')
+                            .addSelect('order.customerName', 'customerName')
+                            .addSelect('order.phoneNumber', 'phoneNumber')
+                            .addSelect('order.customerAddress', 'customerAddress')
+                            .addSelect('order.zipCode', 'zipCode')
+                            .addSelect('order.napomena', 'napomena')
+                            .addSelect('product.name', 'productName')
+                            .addSelect('product.price', 'productPrice')
+                            .addSelect('productToOrder.numberToOrder', 'numberToOrder')
+                            .leftJoin('productToOrder.order', 'order')
+                            .leftJoin('productToOrder.product', 'product')
+                            .getRawMany()];
                     case 1:
                         orders = _a.sent();
                         res.json(orders);
@@ -220,7 +262,9 @@ typeorm_1.createConnection().then(function (connection) {
             var order, results;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, orderRepository.create(req.body)];
+                    case 0:
+                        console.log('########## ', req.body);
+                        return [4 /*yield*/, orderRepository.create(req.body)];
                     case 1:
                         order = _a.sent();
                         return [4 /*yield*/, orderRepository.save(order)];
@@ -233,41 +277,27 @@ typeorm_1.createConnection().then(function (connection) {
     });
     app.post('/orderStaff', function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var order, results;
-            var _this = this;
             return __generator(this, function (_a) {
-                console.log('#### REQ ', req);
-                order = new Order_1.Order();
-                order.customerName = req.body.customerName;
-                order.customerAddress = req.body.customerAddress;
-                order.phoneNumber = req.body.phoneNumber;
-                order.zipCode = req.body.zipCode;
-                order.napomena = req.body.napomena;
-                order.products = [];
-                req.body.products.forEach(function (prId) { return __awaiter(_this, void 0, void 0, function () {
-                    var product;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, productRepository.findOne({ id: prId })];
-                            case 1:
-                                product = _a.sent();
-                                order.products.push(product);
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                // NE TREBA PREKO TIMEOUTA
-                setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, connection.manager.save(order)];
-                            case 1:
-                                results = _a.sent();
-                                return [2 /*return*/, res.send(results)];
-                        }
-                    });
-                }); }, 1000);
                 return [2 /*return*/];
+            });
+        });
+    });
+    app.post('/productToOrder', function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var productToOrder, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        res.setHeader('Access-Control-Allow-Origin', '*');
+                        res.setHeader('Content-type', 'application/json');
+                        return [4 /*yield*/, produtctToOrderRepository.create(req.body)];
+                    case 1:
+                        productToOrder = _a.sent();
+                        return [4 /*yield*/, produtctToOrderRepository.save(productToOrder)];
+                    case 2:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
             });
         });
     });

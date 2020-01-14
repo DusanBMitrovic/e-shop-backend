@@ -4,10 +4,12 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
-  ManyToMany
+  ManyToMany,
+  OneToMany
 } from 'typeorm';
 import { ProductType } from './ProductType';
 import { Order } from './Order';
+import { ProductToOrder } from './ProductToOrder';
 
 @Entity()
 export class Product {
@@ -38,9 +40,15 @@ export class Product {
   )
   productType: ProductType;
 
-  @ManyToMany(
-    type => Order,
-    order => order.products
+  // @ManyToMany(
+  //   type => Order,
+  //   order => order.products
+  // )
+  // orders: Order[];
+
+  @OneToMany(
+    type => ProductToOrder,
+    productToOrder => productToOrder.product
   )
-  orders: Order[];
+  public productToOrder!: ProductToOrder[];
 }

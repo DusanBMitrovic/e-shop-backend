@@ -8,6 +8,7 @@ import {
   ManyToOne
 } from 'typeorm';
 import { Product } from './Product';
+import { ProductToOrder } from './ProductToOrder';
 
 @Entity()
 export class Order {
@@ -33,13 +34,19 @@ export class Order {
   @Column()
   napomena: string;
 
-  @ManyToMany(
-    type => Product,
-    product => product.orders,
-    {
-      cascade: true
-    }
+  //   @ManyToMany(
+  //     type => Product,
+  //     product => product.orders,
+  //     {
+  //       cascade: true
+  //     }
+  //   )
+  //   @JoinTable()
+  //   products: Product[];
+
+  @OneToMany(
+    type => ProductToOrder,
+    productToOrder => productToOrder.order
   )
-  @JoinTable()
-  products: Product[];
+  public productToOrder!: ProductToOrder[];
 }

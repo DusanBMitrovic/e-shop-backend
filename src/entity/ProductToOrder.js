@@ -10,37 +10,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
+var Product_1 = require("./Product");
 var Order_1 = require("./Order");
-var Customer = /** @class */ (function () {
-    function Customer() {
+var ProductToOrder = /** @class */ (function () {
+    function ProductToOrder() {
     }
     __decorate([
         typeorm_1.PrimaryGeneratedColumn(),
         __metadata("design:type", Number)
-    ], Customer.prototype, "id", void 0);
+    ], ProductToOrder.prototype, "productToOrderId", void 0);
     __decorate([
         typeorm_1.Column(),
-        __metadata("design:type", String)
-    ], Customer.prototype, "customerName", void 0);
+        __metadata("design:type", Number)
+    ], ProductToOrder.prototype, "orderId", void 0);
     __decorate([
         typeorm_1.Column(),
-        __metadata("design:type", String)
-    ], Customer.prototype, "customerAddress", void 0);
+        __metadata("design:type", Number)
+    ], ProductToOrder.prototype, "productId", void 0);
     __decorate([
         typeorm_1.Column(),
-        __metadata("design:type", String)
-    ], Customer.prototype, "zipCode", void 0);
+        __metadata("design:type", Number)
+    ], ProductToOrder.prototype, "numberToOrder", void 0);
     __decorate([
-        typeorm_1.Column(),
-        __metadata("design:type", String)
-    ], Customer.prototype, "phoneNumber", void 0);
+        typeorm_1.ManyToOne(function (type) { return Product_1.Product; }, function (product) { return product.productToOrder; }),
+        __metadata("design:type", Product_1.Product)
+    ], ProductToOrder.prototype, "product", void 0);
     __decorate([
-        typeorm_1.OneToMany(function (type) { return Order_1.Order; }, function (order) { return order.customer; }),
-        __metadata("design:type", Array)
-    ], Customer.prototype, "orders", void 0);
-    Customer = __decorate([
+        typeorm_1.ManyToOne(function (type) { return Order_1.Order; }, function (order) { return order.productToOrder; }),
+        __metadata("design:type", Order_1.Order)
+    ], ProductToOrder.prototype, "order", void 0);
+    ProductToOrder = __decorate([
         typeorm_1.Entity()
-    ], Customer);
-    return Customer;
+    ], ProductToOrder);
+    return ProductToOrder;
 }());
-exports.Customer = Customer;
+exports.ProductToOrder = ProductToOrder;

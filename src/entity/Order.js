@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
-var Product_1 = require("./Product");
+var ProductToOrder_1 = require("./ProductToOrder");
 var Order = /** @class */ (function () {
     function Order() {
     }
@@ -45,12 +45,9 @@ var Order = /** @class */ (function () {
         __metadata("design:type", String)
     ], Order.prototype, "napomena", void 0);
     __decorate([
-        typeorm_1.ManyToMany(function (type) { return Product_1.Product; }, function (product) { return product.orders; }, {
-            cascade: true
-        }),
-        typeorm_1.JoinTable(),
+        typeorm_1.OneToMany(function (type) { return ProductToOrder_1.ProductToOrder; }, function (productToOrder) { return productToOrder.order; }),
         __metadata("design:type", Array)
-    ], Order.prototype, "products", void 0);
+    ], Order.prototype, "productToOrder", void 0);
     Order = __decorate([
         typeorm_1.Entity()
     ], Order);
