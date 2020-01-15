@@ -28,14 +28,24 @@ createConnection().then(connection => {
     next();
   });
 
-  // register routes
+  //USER ROUTES
+  app.get('/users/credentials/:username/:password', async function(
+    req: Request,
+    res: Response
+  ) {
+    const results = await userRepository.findOne({
+      where: [{ username: req.params.username, password: req.params.password }]
+    });
+    return res.send(results);
+  });
 
+  // register routes
   app.get('/users', async function(req: Request, res: Response) {
     const users = await userRepository.find();
     res.json(users);
   });
 
-  app.get('/users/:id', async function(req: Request, res: Response) {
+  app.get('/users/id/:id', async function(req: Request, res: Response) {
     const results = await userRepository.findOne(req.params.id);
     return res.send(results);
   });

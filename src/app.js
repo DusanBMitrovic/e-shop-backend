@@ -60,6 +60,22 @@ typeorm_1.createConnection().then(function (connection) {
         res.setHeader('Access-Control-Allow-Credentials', 'true');
         next();
     });
+    //USER ROUTES
+    app.get('/users/credentials/:username/:password', function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, userRepository.findOne({
+                            where: [{ username: req.params.username, password: req.params.password }]
+                        })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
+            });
+        });
+    });
     // register routes
     app.get('/users', function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
@@ -75,7 +91,7 @@ typeorm_1.createConnection().then(function (connection) {
             });
         });
     });
-    app.get('/users/:id', function (req, res) {
+    app.get('/users/id/:id', function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var results;
             return __generator(this, function (_a) {

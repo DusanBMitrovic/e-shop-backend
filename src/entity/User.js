@@ -20,11 +20,11 @@ var User = /** @class */ (function () {
     __decorate([
         typeorm_1.Column(),
         __metadata("design:type", String)
-    ], User.prototype, "firstName", void 0);
+    ], User.prototype, "username", void 0);
     __decorate([
         typeorm_1.Column(),
         __metadata("design:type", String)
-    ], User.prototype, "lastName", void 0);
+    ], User.prototype, "password", void 0);
     User = __decorate([
         typeorm_1.Entity()
     ], User);
